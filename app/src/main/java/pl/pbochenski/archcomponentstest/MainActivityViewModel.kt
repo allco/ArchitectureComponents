@@ -3,6 +3,7 @@ package pl.pbochenski.archcomponentstest
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
+import pl.pbochenski.archcomponentstest.framework.map
 import timber.log.Timber
 
 /**

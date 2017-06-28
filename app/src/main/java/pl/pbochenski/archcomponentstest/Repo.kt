@@ -2,7 +2,6 @@ package pl.pbochenski.archcomponentstest
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
 import pl.pbochenski.archcomponentstest.hackernews.Api
 import pl.pbochenski.archcomponentstest.hackernews.Item
 import retrofit2.Call
@@ -39,7 +38,6 @@ class PostRepo(private val api: Api) {
     }
 
     fun loadMore(position: Int, size: Int) {
-        Timber.d("loadmore $position - $size")
 
         (position..minOf(position + size, itemIds.size))
                 .map {
@@ -47,7 +45,7 @@ class PostRepo(private val api: Api) {
                         override fun onResponse(call: Call<Item?>?, response: Response<Item?>?) {
                             posts.value = posts.value
                                     ?.plus(response?.body())
-                                    ?.toSet()
+                                    ?.toSet() //removes duplicates
                                     ?.filter { it != null }
                                     ?.map { it as Item }
                         }
@@ -59,6 +57,3 @@ class PostRepo(private val api: Api) {
                 }
     }
 }
-
-fun <T, R> LiveData<T>.map(f: (T) -> R): LiveData<R> = Transformations.map(this, f)
-fun <T, R> LiveData<T>.flatMap(f: (T) -> LiveData<R>): LiveData<R> = Transformations.switchMap(this, f)

@@ -1,4 +1,4 @@
-package pl.pbochenski.archcomponentstest
+package pl.pbochenski.archcomponentstest.framework
 
 import android.support.annotation.LayoutRes
 import android.support.v7.util.DiffUtil
@@ -28,7 +28,7 @@ fun <T> RecyclerView.Adapter<*>.autoUpdate(old: List<T>, new: List<T>, compare: 
 
         override fun getNewListSize() = new.size
     })
-    
+
     diff.dispatchUpdatesTo(this)
 }
 
