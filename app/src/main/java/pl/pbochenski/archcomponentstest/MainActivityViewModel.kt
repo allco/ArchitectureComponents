@@ -4,7 +4,6 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import pl.pbochenski.archcomponentstest.framework.map
-import timber.log.Timber
 
 /**
  * Created by Pawel Bochenski on 22.06.2017.
@@ -29,16 +28,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun getItemCount() = posts.size + 1 // +1 for spinner item
 
     fun getItem(position: Int): ItemData {
-        Timber.d("getItem $position")
         return if (position == posts.size) {
             if (position == 0) {
-                Timber.d("start loading")
                 postRepo.load(LOAD_ITEM_COUNT)
             }
             ItemData.Spinner()
         } else {
-            if (position == posts.size - 1 && position > LOAD_ITEM_COUNT - 1) {
-                Timber.d("load more please")
+            if (position == posts.size - 1) {
                 postRepo.loadMore(position, LOAD_ITEM_COUNT)
             }
             ItemData.Post(posts[position])

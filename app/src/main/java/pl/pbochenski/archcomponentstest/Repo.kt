@@ -2,11 +2,11 @@ package pl.pbochenski.archcomponentstest
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import pl.pbochenski.archcomponentstest.hackernews.Api
 import pl.pbochenski.archcomponentstest.hackernews.Item
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import ru.gildor.coroutines.retrofit.await
 import timber.log.Timber
 
 /**
@@ -20,40 +20,30 @@ class PostRepo(private val api: Api) {
         return posts
     }
 
-    fun load(size: Int) {
+    fun load(size: Int) = launch(UI) {
+        Timber.d("load")
         itemIds = emptyList()
         posts.value = emptyList()
-        api.topStories().enqueue(object : Callback<List<Long>?> {
-            override fun onResponse(call: Call<List<Long>?>?, response: Response<List<Long>?>?) {
-                if (response?.isSuccessful ?: false) {
-                    itemIds = response?.body() ?: emptyList()
-                    loadMore(0, size)
-                }
-            }
-
-            override fun onFailure(call: Call<List<Long>?>?, t: Throwable?) {
-                Timber.e(t)
-            }
-        })
+        itemIds = api.topStories().await()
+        loadMore(0, size)
     }
 
-    fun loadMore(position: Int, size: Int) {
+    fun loadMore(position: Int, size: Int) = launch(UI) {
+        Timber.d("load more $position $size")
+        posts.value = getNewValues(posts.value, position, size, itemIds)
+    }
 
-        (position..minOf(position + size, itemIds.size))
-                .map {
-                    api.getItem(itemIds[it]).enqueue(object : Callback<Item?> {
-                        override fun onResponse(call: Call<Item?>?, response: Response<Item?>?) {
-                            posts.value = posts.value
-                                    ?.plus(response?.body())
-                                    ?.toSet() //removes duplicates
-                                    ?.filter { it != null }
-                                    ?.map { it as Item }
-                        }
+    private suspend fun getNewValues(currentItems: List<Item>?, position: Int, size: Int, itemIds: List<Long>): List<Item> {
+        return ArrayList(posts.value)
+                .plus(get(itemIds.subList(position, minOf(position + size, itemIds.size))))
+                .toSet() //remove duplicates
+                .filter { it != null }
+                .map { it as Item }
+    }
 
-                        override fun onFailure(call: Call<Item?>?, t: Throwable?) {
-                            Timber.e(t)
-                        }
-                    })
-                }
+    private suspend fun get(positions: List<Long>): List<Item?> {
+        return positions.map {
+            api.getItem(it).await()
+        }
     }
 }
