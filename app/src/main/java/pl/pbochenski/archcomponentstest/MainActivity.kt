@@ -30,7 +30,7 @@ class MainActivity : LifecycleActivity() {
         model.getPosts().observe(this, Observer {
             it?.let {
                 swipeRefreshLayout.isRefreshing = false
-                content.adapter.autoUpdate(it.first, it.second, { o1, o2 -> o1.id == o2.id })
+                content.adapter.autoUpdate(it.first, it.second)
             }
         })
     }

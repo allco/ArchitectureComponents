@@ -34,7 +34,7 @@ class PostRepo(private val api: Api) {
     }
 
     private suspend fun getNewValues(currentItems: List<Item>?, position: Int, size: Int, itemIds: List<Long>): List<Item> {
-        return ArrayList(posts.value)
+        return ArrayList(currentItems)
                 .plus(get(itemIds.subList(position, minOf(position + size, itemIds.size))))
                 .toSet() //remove duplicates
                 .filter { it != null }

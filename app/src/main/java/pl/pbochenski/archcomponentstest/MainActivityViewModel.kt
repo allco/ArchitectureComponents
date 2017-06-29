@@ -32,7 +32,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             if (position == 0) {
                 postRepo.load(LOAD_ITEM_COUNT)
             }
-            ItemData.Spinner()
+            ItemData.Spinner
         } else {
             if (position == posts.size - 1) {
                 postRepo.loadMore(position, LOAD_ITEM_COUNT)
