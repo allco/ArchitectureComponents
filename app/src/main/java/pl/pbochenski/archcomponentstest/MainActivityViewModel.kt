@@ -11,43 +11,26 @@ import pl.pbochenski.archcomponentstest.framework.map
 class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private val postRepo = getApplication<App>().postRepo //poor man DI :D
-    private var posts = emptyList<Post>()
+    private var posts = emptyList<ItemData>()
     private val LOAD_ITEM_COUNT = 15
 
 
-    fun getPosts(): LiveData<Pair<List<Post>, List<Post>>> {
+    fun getPosts(): LiveData<Pair<List<ItemData>, List<ItemData>>> {
         return postRepo.getPosts().map {
             val old = ArrayList(posts)
-            posts = it.map {
-                Post(it.id, it.title, it.url)
-            }
+            posts = it.map { ItemData.Post(Post(it.id, it.title, it.url)) } + ItemData.Spinner
             Pair(old.toList(), posts)
         }
     }
 
-    fun getItemCount() = posts.size + 1 // +1 for spinner item
-
-    fun getItem(position: Int): ItemData {
-        return if (position == posts.size) {
-            if (position == 0) {
-                postRepo.load(LOAD_ITEM_COUNT)
+    fun getItemCount() = posts.size
+    fun getItemType(position: Int) = posts[position].type
+    fun getItem(position: Int) = posts[position]
+            .also {
+                when (position) {
+                    posts.size - 2 -> postRepo.loadMore(position, LOAD_ITEM_COUNT)
+                }
             }
-            ItemData.Spinner
-        } else {
-            if (position == posts.size - 1) {
-                postRepo.loadMore(position, LOAD_ITEM_COUNT)
-            }
-            ItemData.Post(posts[position])
-        }
-    }
-
-    fun getItemType(position: Int): Int {
-        return if (position == posts.size) {
-            ViewTypes.SPINNER.ordinal
-        } else {
-            ViewTypes.NORMAL.ordinal
-        }
-    }
 
     fun refresh() {
         postRepo.load(LOAD_ITEM_COUNT)

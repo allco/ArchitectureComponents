@@ -33,5 +33,7 @@ class MainActivity : LifecycleActivity() {
                 content.adapter.autoUpdate(it.first, it.second)
             }
         })
+
+        model.refresh()
     }
 }

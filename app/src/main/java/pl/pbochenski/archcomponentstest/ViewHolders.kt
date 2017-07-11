@@ -14,9 +14,9 @@ import pl.pbochenski.archcomponentstest.framework.inflate
  */
 
 //data
-sealed class ItemData {
-    object Spinner : ItemData()
-    data class Post(val post: pl.pbochenski.archcomponentstest.Post) : ItemData()
+sealed class ItemData(val type: Int) {
+    object Spinner : ItemData(1)
+    data class Post(val post: pl.pbochenski.archcomponentstest.Post) : ItemData(0)
 }
 
 //bindings
