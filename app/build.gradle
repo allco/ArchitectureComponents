@@ -43,7 +43,7 @@ dependencies {
     ext.appCompatVersion = '26.0.0-alpha1'
     ext.retroftVersion = '2.3.0'
 
-    compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.1'
+    compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.6.0'
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.16"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.16"
 
