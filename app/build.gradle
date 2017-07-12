@@ -28,6 +28,10 @@ kotlin {
 }
 
 dependencies {
+    ext.archVersion = '1.0.0-alpha4'
+    ext.appCompatVersion = '26.0.0-alpha1'
+    ext.retroftVersion = '2.3.0'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -37,11 +41,14 @@ dependencies {
     testCompile('com.nhaarman:mockito-kotlin-kt1.1:1.5.0', {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
     })
+    testCompile("android.arch.core:core-testing:$archVersion", {
+        exclude group: 'com.android.support', module: 'support-compat'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-core-utils'
+    })
 
 
-    ext.archVersion = '1.0.0-alpha3'
-    ext.appCompatVersion = '26.0.0-alpha1'
-    ext.retroftVersion = '2.3.0'
+
 
     compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.6.0'
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.16"
