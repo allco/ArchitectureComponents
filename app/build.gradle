@@ -46,10 +46,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
-
-
-
-
+    
     compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.6.0'
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.16"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.16"
@@ -62,10 +59,6 @@ dependencies {
     //arch components
     compile "android.arch.lifecycle:runtime:$archVersion"
     compile "android.arch.lifecycle:extensions:$archVersion"
-    compile "android.arch.persistence.room:runtime:$archVersion"
-    kapt "android.arch.lifecycle:compiler:$archVersion"
-    kapt "android.arch.persistence.room:compiler:$archVersion"
-
 
     compile 'com.jakewharton.timber:timber:4.5.1'
     compile "com.squareup.retrofit2:retrofit:$retroftVersion"

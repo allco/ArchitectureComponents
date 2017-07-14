@@ -5,8 +5,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
-import pl.pbochenski.archcomponentstest.framework.autoUpdate
-import pl.pbochenski.archcomponentstest.framework.createAdapter
+import pl.pbochenski.archcomponentstest.framework.DefaultAdapter
 
 
 class MainActivity : LifecycleActivity() {
@@ -15,13 +14,8 @@ class MainActivity : LifecycleActivity() {
         setContentView(R.layout.activity_main)
 
         val model = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-        content.adapter = createAdapter(
-                { model.getItemCount() },
-                { position -> model.getItemType(position) },
-                { group, type -> ViewTypes.values()[type].createVH(group) },
-                { vh, position -> ViewTypes.values().first { it.ordinal == vh.itemViewType }.bind(model.getItem(position), vh) }
-        )
+        val adapter = DefaultAdapter(MainScreenVT.values().toList())
+        content.adapter = adapter
 
         swipeRefreshLayout.setOnRefreshListener {
             model.refresh()
@@ -30,7 +24,8 @@ class MainActivity : LifecycleActivity() {
         model.getPosts().observe(this, Observer {
             it?.let {
                 swipeRefreshLayout.isRefreshing = false
-                content.adapter.autoUpdate(it.first, it.second)
+                adapter.setItems(it.map { ItemData.Post(it) } + ItemData.Spinner)
+                adapter.addOnItemBindListener(it.size - 5, { model.loadMore() })
             }
         })
 

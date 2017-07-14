@@ -8,4 +8,4 @@ import android.arch.lifecycle.Transformations
  */
 fun <T, R> LiveData<T>.map(f: (T) -> R): LiveData<R> = Transformations.map(this, f)
 
-fun <T, R> LiveData<T>.flatMap(f: (T) -> LiveData<R>): LiveData<R> = Transformations.switchMap(this, f)
+fun <T, R> LiveData<T>.switchMap(f: (T) -> LiveData<R>): LiveData<R> = Transformations.switchMap(this, f)

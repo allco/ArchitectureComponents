@@ -13,7 +13,6 @@ import pl.pbochenski.archcomponentstest.hackernews.Type
 /**
  * Created by Pawel Bochenski on 29.06.2017.
  */
-typealias ViewModelReturnType = Pair<List<ItemData>, List<ItemData>>
 
 class MainViewModelTest {
 
@@ -48,21 +47,17 @@ class MainViewModelTest {
 
 
     @Test
-    fun shouldGetPostsAndHaveACopyOfIt() {
+    fun shouldGetPostsAfterUpdate() {
         //given
         val returnedItem = createDummyItem()
-        val observer = mock<Observer<ViewModelReturnType>>()
+        val observer = mock<Observer<List<Post>>>()
         model.getPosts().observeForever(observer)
 
         //when
         liveData.value = listOf(returnedItem)
 
         //than
-        verify(observer).onChanged(
-                ViewModelReturnType(
-                        emptyList(),
-                        listOf(ItemData.Post(Post(returnedItem.id, returnedItem.title, returnedItem.url)),
-                                ItemData.Spinner)))
+        verify(observer).onChanged(listOf(Post(returnedItem.id, returnedItem.title, returnedItem.url)))
     }
 
     private fun createDummyItem() = Item(1, false, Type.story, "", 123, "123", false, null, null, emptyList(), null, 1, "test", null, null)

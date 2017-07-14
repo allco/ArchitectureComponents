@@ -8,11 +8,12 @@ import pl.pbochenski.archcomponentstest.hackernews.Api
 import pl.pbochenski.archcomponentstest.hackernews.Item
 import ru.gildor.coroutines.retrofit.await
 import timber.log.Timber
+import kotlin.coroutines.experimental.CoroutineContext
 
 /**
  * Created by Pawel Bochenski on 09.06.2017.
  */
-class PostRepo(private val api: Api) {
+class PostRepo(private val api: Api, private val context: CoroutineContext = UI) {
     private val posts = MutableLiveData<List<Item>>().apply { value = emptyList() }
     private var itemIds = emptyList<Long>()
 
@@ -20,17 +21,17 @@ class PostRepo(private val api: Api) {
         return posts
     }
 
-    fun load(size: Int) = launch(UI) {
+    fun load(size: Int) = launch(context) {
         Timber.d("load")
         itemIds = emptyList()
         posts.value = emptyList()
         itemIds = api.topStories().await()
-        loadMore(0, size)
+        loadMore(size)
     }
 
-    fun loadMore(position: Int, size: Int) = launch(UI) {
-        Timber.d("load more $position $size")
-        posts.value = getNewValues(posts.value, position, size, itemIds)
+    fun loadMore(size: Int) = launch(context) {
+        Timber.d("load more $size")
+        posts.value = getNewValues(posts.value, posts.value?.size ?: 0, size, itemIds)
     }
 
     private suspend fun getNewValues(currentItems: List<Item>?, position: Int, size: Int, itemIds: List<Long>): List<Item> {
