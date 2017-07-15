@@ -46,10 +46,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
-    
-    compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.6.0'
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.16"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.16"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
@@ -59,12 +55,18 @@ dependencies {
     //arch components
     compile "android.arch.lifecycle:runtime:$archVersion"
     compile "android.arch.lifecycle:extensions:$archVersion"
+    compile "android.arch.lifecycle:reactivestreams:$archVersion"
 
     compile 'com.jakewharton.timber:timber:4.5.1'
     compile "com.squareup.retrofit2:retrofit:$retroftVersion"
     compile "com.squareup.retrofit2:converter-gson:$retroftVersion"
     compile "com.squareup.retrofit2:converter-scalars:$retroftVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retroftVersion"
 
+    compile "com.squareup.okhttp3:logging-interceptor:3.8.0"
+
+    compile "io.reactivex.rxjava2:rxjava:2.1.1"
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 }
 repositories {
     mavenCentral()

@@ -33,7 +33,7 @@ class MainViewModelTest {
 
         liveData = MutableLiveData<List<Item>>()
         repo.stub {
-            on { getPosts() } doReturn liveData
+            on { posts } doReturn liveData
         }
 
         model = MainViewModel(app)

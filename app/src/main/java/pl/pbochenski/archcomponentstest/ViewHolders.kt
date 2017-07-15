@@ -45,6 +45,7 @@ class ListVH(view: View) : RecyclerView.ViewHolder(view) {
             itemView.setOnClickListener {
                 ContextCompat.startActivity(itemView.context, Intent(Intent.ACTION_VIEW, Uri.parse(item.url)), null)
             }
+            itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, android.R.color.white))
         } else {
             itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorPrimaryDark))
         }

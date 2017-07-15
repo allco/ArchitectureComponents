@@ -1,6 +1,6 @@
 package pl.pbochenski.archcomponentstest.hackernews
 
-import retrofit2.Call
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -31,11 +31,11 @@ enum class Type {
 //base url: https://hacker-news.firebaseio.com/v0/
 interface Api {
     @GET("maxitem.json")
-    fun maxItem(): Call<Long>
+    fun maxItem(): Single<Long>
 
     @GET("topstories.json")
-    fun topStories(): Call<List<Long>>
+    fun topStories(): Single<List<Long>>
 
     @GET("item/{id}.json")
-    fun getItem(@Path("id") id: Long): Call<Item>
+    fun getItem(@Path("id") id: Long): Single<Item>
 }

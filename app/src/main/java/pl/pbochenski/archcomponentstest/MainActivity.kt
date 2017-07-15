@@ -25,7 +25,7 @@ class MainActivity : LifecycleActivity() {
             it?.let {
                 swipeRefreshLayout.isRefreshing = false
                 adapter.setItems(it.map { ItemData.Post(it) } + ItemData.Spinner)
-                adapter.addOnItemBindListener(it.size - 5, { model.loadMore() })
+                adapter.addOnItemBindListener(it.size, { model.loadMore() })
             }
         })
 
