@@ -3,7 +3,6 @@ package pl.pbochenski.archcomponentstest
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.MutableLiveData
-import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -17,7 +16,7 @@ import timber.log.Timber
  */
 class PostRepo(private val api: Api) {
 
-    sealed class Command {
+    private sealed class Command {
         class Reset(val size: Int) : Command()
         class LoadMore(val position: Int, val size: Int) : Command()
     }
@@ -41,30 +40,37 @@ class PostRepo(private val api: Api) {
                 }
             }.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .toFlowable()
                     .subscribe(it)
         }
 
     }
 
-    private fun getMore(position: Int, size: Int): Flowable<List<Item>> {
+    private fun getMore(position: Int, size: Int): Single<List<Item>> {
         val getSingle = get(itemIds.subList(position, position + size))
         return Single.zip(getSingle, { it.map { it as Item } }).flatMap {
-            val current = posts.value ?: emptyList()
+            val current = posts.value ?: emptyList() //static data used. maybe promote to parameter?
             val toReturn = (current + it).toSet().toList()
             Single.just(toReturn)
-        }.toFlowable()
+        }
     }
 
-    private fun getFirst(size: Int): Flowable<List<Item>> {
+    private fun getFirst(size: Int): Single<List<Item>> {
         return api.topStories().map {
-            itemIds = it
+            itemIds = it //look out for side effect
             get(it.take(size))
         }.flatMap {
             Single.zip(it, { it.map { it as Item } })
-        }.toFlowable()
+        }
 
     }
 
+
+    private fun get(positions: List<Long>): List<Single<Item>> {
+        return positions.map {
+            api.getItem(it)
+        }
+    }
 
     fun load(size: Int) {
         Timber.d("load")
@@ -77,11 +83,5 @@ class PostRepo(private val api: Api) {
         Timber.d("load more $size")
 
         commands.value = Command.LoadMore(posts.value?.size ?: 0, size)
-    }
-
-    private fun get(positions: List<Long>): List<Single<Item>> {
-        return positions.map {
-            api.getItem(it)
-        }
     }
 }

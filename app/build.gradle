@@ -54,7 +54,6 @@ dependencies {
 
     //arch components
     compile "android.arch.lifecycle:runtime:$archVersion"
-    compile "android.arch.lifecycle:extensions:$archVersion"
     compile "android.arch.lifecycle:reactivestreams:$archVersion"
 
     compile 'com.jakewharton.timber:timber:4.5.1'
